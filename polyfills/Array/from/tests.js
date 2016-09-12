@@ -87,7 +87,7 @@ describe('returns an array with', function () {
 			}
 		}
 
-		if ([][Symbol.iterator]) {
+		if ([][Symbol.iterator] || []['@@iterator']) {
 			it('can convert from a custom iterator', function () {
 				function iterable(count) {
 					var iterator = {
