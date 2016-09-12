@@ -87,35 +87,37 @@ describe('returns an array with', function () {
 			}
 		}
 
-		it('can convert from a custom iterator', function () {
-			function iterable(count) {
-				var iterator = {
-					'@@iterator': function () {
-						throw new Error();
-					}
-				};
-				iterator[Symbol.iterator] = function () {
-					var cnt = count;
-					return {
-						next: function () {
-							return cnt === 0
-								? {
-									done: true
-								}
-								: {
-									value: cnt--,
-									done: false
-								};
+		if ([][Symbol.iterator]) {
+			it('can convert from a custom iterator', function () {
+				function iterable(count) {
+					var iterator = {
+						'@@iterator': function () {
+							throw new Error();
 						}
 					};
-				};
-				return iterator;
-			}
-			proclaim.deepEqual(Array.from(iterable(0)), []);
-			proclaim.deepEqual(Array.from(iterable(1)), [1]);
-			proclaim.deepEqual(Array.from(iterable(2)), [2, 1]);
-			proclaim.deepEqual(Array.from(iterable(3)), [3, 2, 1]);
-		});
+					iterator[Symbol.iterator] = function () {
+						var cnt = count;
+						return {
+							next: function () {
+								return cnt === 0
+									? {
+										done: true
+									}
+									: {
+										value: cnt--,
+										done: false
+									};
+							}
+						};
+					};
+					return iterator;
+				}
+				proclaim.deepEqual(Array.from(iterable(0)), []);
+				proclaim.deepEqual(Array.from(iterable(1)), [1]);
+				proclaim.deepEqual(Array.from(iterable(2)), [2, 1]);
+				proclaim.deepEqual(Array.from(iterable(3)), [3, 2, 1]);
+			});
+		}
 
 	});
 
