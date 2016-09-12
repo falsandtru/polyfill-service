@@ -1,14 +1,15 @@
 
 // Wrapped in IIFE to prevent leaking to global scope.
 (function () {
-	function parseIterable(arraylike) {
-		if (typeof arraylike[Symbol.iterator] !== 'function') {
+	var iterator = typeof Symbol === 'function' ? Symbol.iterator : '@@iterator';
+	function parseIterable (arraylike) {
+		if (typeof arraylike[iterator] !== 'function') {
 			return typeof arraylike === 'string'
 				? arraylike.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]?|[^\uD800-\uDFFF]|./g) || []
-				: undefined;
+				: null;
 		}
 		var array = [];
-		var iter = arraylike[Symbol.iterator]();
+		var iter = arraylike[iterator]();
 		while (true) {
 			var result = iter.next();
 			if (result.done) return array;
